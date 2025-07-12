@@ -1,36 +1,6 @@
-import { EmbedBuilder,SlashCommandBuilder, TextChannel, ChatInputCommandInteraction } from 'discord.js';
-import { Command } from '../interfaces';
-import dotenv from 'dotenv';
-dotenv.config();
-
-interface Meta {
-  found: number;
-  returned: number;
-  limit: number;
-  page: number;
-}
-
-// Define the structure for a single 'data' item (e.g., an article or news item)
-interface Article {
-  uuid: string;
-  title: string;
-  description: string;
-  keywords: string;
-  snippet: string;
-  url: string;
-  image_url: string;
-  language: string;
-  published_at: string; // Consider using Date type if parsing is done after receiving
-  source: string;
-  categories: string[];
-  relevance_score: number | null; // Can be null based on the example
-  locale: string;
-}
-
-interface NewsApiResponse {
-  meta: Meta;
-  data: Article[];
-}
+import { SlashCommandBuilder, TextChannel, ChatInputCommandInteraction } from 'discord.js';
+import { Command } from '../interfaces.js';
+import { fetchTechnologyNewsEmbeds } from '../functions/techNews.js';
 
 const newsCommand:Command = {
     data:new SlashCommandBuilder()

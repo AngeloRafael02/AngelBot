@@ -1,5 +1,5 @@
 import  { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from 'discord.js'
-import { Command } from '../interfaces';
+import { Command } from '../interfaces.js';
 
 
 const banCommand:Command = {

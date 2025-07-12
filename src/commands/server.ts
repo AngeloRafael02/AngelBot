@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, Guild, SlashCommandBuilder } from "discord.js";
-import { Command } from "../interfaces";
+import { Command } from "../interfaces.js";
 
 const ServerCommand:Command = {
 	data: new SlashCommandBuilder()

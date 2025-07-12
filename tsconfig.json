@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext", // <--- Ensure this is ESNext or similar (e.g., ES2020, NodeNext)
+    "module": "nodenext", // <--- Ensure this is ESNext or similar (e.g., ES2020, NodeNext)
     "rootDir": "./src",
     "outDir": "./dist",
     "esModuleInterop": true,
@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     //"declaration": true,
     //"sourceMap": true,
-    "moduleResolution": "bundler" // <--- Often recommended for ESM projects
+    "moduleResolution": "NodeNext" // <--- Often recommended for ESM projects
     // or "node" if you have specific reasons
   },
   "include": ["src/**/*.ts", "src/commands/currentWeather2.ts"],

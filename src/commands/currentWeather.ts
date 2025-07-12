@@ -1,29 +1,7 @@
-import { EmbedBuilder, ColorResolvable, ChatInputCommandInteraction, TextChannel, SlashCommandBuilder } from 'discord.js'; // Import EmbedBuilder
-import { Command } from '../interfaces';
-import dotenv from 'dotenv';
-dotenv.config();
+import { ChatInputCommandInteraction, TextChannel, SlashCommandBuilder } from 'discord.js'; // Import EmbedBuilder
+import { Command } from '../interfaces.js';
+import { fetchWeatherEmbed } from '../functions/currentWeather.js';
 
-interface WeatherData {
-    location: {
-        name: string;
-        region: string;
-        country: string;
-    };
-    current: {
-        temp_c: number;
-        temp_f: number;
-        is_day: number;
-        condition: {
-            text: string;
-            icon: string;
-        };
-        humidity: number;
-        wind_kph: number;
-        pressure_mb: number;
-    };
-}
-
-// TO BE TESTED
 const WeatherCommand:Command = {
     data:new SlashCommandBuilder()
         .setName('weather')

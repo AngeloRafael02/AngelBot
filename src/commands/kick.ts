@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits,ChatInputCommandInteraction, InteractionResponse, Message } from 'discord.js';
-import { Command } from '../interfaces';
+import { Command } from '../interfaces.js';
 
 const kickCommand:Command =  {
     data: new SlashCommandBuilder()
