@@ -5,9 +5,8 @@
   "description": "My Personal Discord to Boost Productivity using Automation with Google's various APIs",
   "main": "index.js",
   "scripts": {
-    "inspect":"node --inspect src/index.js",
-    "profile":"node --prof index.js",
-    "readProfile":"node --prof-process isolate-0xnnnnnnnnnnnn-v8.log > logs/processed.txt",
+    "inspect": "node --inspect dist/index.js",
+    "profile": "node --prof dist/index.js",
     "build": "rmdir /s /q dist && npx tsc",
     "build2": "node  --loader ts-node/esm src/index.ts",
     "clean": "rimraf dist",
@@ -38,7 +37,8 @@
     "dotenv": "^17.0.0",
     "ffmpeg-static": "^5.2.0",
     "googleapis": "^150.0.1",
-    "mongoose": "^8.16.1"
+    "mongoose": "^8.16.1",
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "@types/mongoose": "^5.11.96",

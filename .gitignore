@@ -1,4 +1,8 @@
 .env
 
+# CPU Profile files
+*.log
+processed.txt
+
 node_modules/
 dist/
