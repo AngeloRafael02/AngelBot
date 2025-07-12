@@ -1,15 +1,21 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+import { REST, Routes, Client, GatewayIntentBits,Partials, Collection, PresenceUpdateStatus, Events, Interaction, CacheType, ActivityType, Channel, TextChannel } from 'discord.js';
+import { schedule } from 'node-cron';
 import { readdirSync } from 'fs';
 import { pathToFileURL } from 'url';
 import { join } from 'path';
-import dotenv from 'dotenv';
-import { REST, Routes, Client, GatewayIntentBits,Partials, Collection, PresenceUpdateStatus, Events, Interaction, CacheType, ActivityType } from 'discord.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { ClientWithCommands, Command } from './interfaces'
+
+import { ClientWithCommands, Command } from './interfaces.js'
+//import {fetchWeatherEmbed} from './functions/currentWeather.js';
+//import fetchTechnologyNewsEmbeds from './functions/techNews.js';
 
 const __filename:string = fileURLToPath(import.meta.url);
 const __dirname:string = dirname(__filename);
-dotenv.config();
+
 
 const deployCommands = async ():Promise<void> => {
     try {
@@ -48,6 +54,7 @@ const deployCommands = async ():Promise<void> => {
         console.error('Error deploying commands:', error)
     }
 }
+
 
 
 const client =  new Client({
