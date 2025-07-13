@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { REST, Routes, Client, GatewayIntentBits,Partials, Collection, PresenceUpdateStatus, Events, Interaction, CacheType, ActivityType, Channel, TextChannel } from 'discord.js';
+import { REST, Routes, Client, GatewayIntentBits,Partials, Collection, PresenceUpdateStatus, Events, Interaction, CacheType, ActivityType, Channel, TextChannel, EmbedBuilder, PermissionsBitField } from 'discord.js';
 import { schedule } from 'node-cron';
 import { readdirSync } from 'fs';
 import { pathToFileURL } from 'url';
@@ -10,12 +10,10 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 import { ClientWithCommands, Command } from './interfaces.js'
-//import {fetchWeatherEmbed} from './functions/currentWeather.js';
-//import fetchTechnologyNewsEmbeds from './functions/techNews.js';
+import { runDailyTasks } from './utils/runDailyTask.js';
 
 const __filename:string = fileURLToPath(import.meta.url);
 const __dirname:string = dirname(__filename);
-
 
 const deployCommands = async ():Promise<void> => {
     try {
@@ -54,8 +52,6 @@ const deployCommands = async ():Promise<void> => {
         console.error('Error deploying commands:', error)
     }
 }
-
-
 
 const client =  new Client({
     intents:[
@@ -105,6 +101,12 @@ client.once(Events.ClientReady, async ()=>{
     });
     console.log(`Bot Status Set To ${statusType}`);
     console.log(`Activity Set To ${activityType} ${activityName}`);
+
+    schedule('49 9 * * *', async () => {
+        await runDailyTasks(client, 'Scheduled Cron Job');
+    }, {
+        timezone: "Asia/Manila" // Set the timezone specifically for Balete, Calabarzon, Philippines
+    });
 });
 
 client.on(Events.InteractionCreate, async (interaction:Interaction<CacheType>)=>{
@@ -136,3 +138,16 @@ client.on(Events.InteractionCreate, async (interaction:Interaction<CacheType>)=>
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
+
+client.on('error', error => {
+    console.error('A client error occurred:', error);
+});
+
+client.on('warn', info => {
+    console.warn('A client warning occurred:', info);
+});
+
+process.on('unhandledRejection', error => {
+    console.error('Unhandled promise rejection:', error);
+    process.exit(1);
+});

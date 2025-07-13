@@ -1,7 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { NewsApiResponse } from '../interfaces.js';
-import dotenv from 'dotenv';
-dotenv.config();
+import { NewsApiResponse } from '../../interfaces.js';
 
 
 /**

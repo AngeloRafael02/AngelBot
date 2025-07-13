@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, TextChannel, SlashCommandBuilder } from 'discord.js'; // Import EmbedBuilder
 import { Command } from '../interfaces.js';
-import { fetchWeatherEmbed } from '../functions/currentWeather.js';
+import { fetchWeatherEmbed } from './functions/currentWeather.js';
 
 const WeatherCommand:Command = {
     data:new SlashCommandBuilder()

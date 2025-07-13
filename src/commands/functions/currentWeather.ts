@@ -1,5 +1,5 @@
 import { EmbedBuilder, ColorResolvable } from 'discord.js'; // Import EmbedBuilder
-import { WeatherData } from '../interfaces.js';
+import { WeatherData } from '../../interfaces.js';
 
 /**
  * Fetches weather data from WeatherAPI.com and returns a Discord Embed.

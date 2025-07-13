@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, TextChannel, ChatInputCommandInteraction } from 'discord.js';
 import { Command } from '../interfaces.js';
-import { fetchTechnologyNewsEmbeds } from '../functions/techNews.js';
+import { fetchTechnologyNewsEmbeds } from './functions/techNews.js';
 
 const newsCommand:Command = {
     data:new SlashCommandBuilder()
