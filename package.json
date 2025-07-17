@@ -38,7 +38,8 @@
     "ffmpeg-static": "^5.2.0",
     "googleapis": "^150.0.1",
     "mongoose": "^8.16.1",
-    "node-cron": "^4.2.1"
+    "node-cron": "^4.2.1",
+    "play-dl": "^1.9.7"
   },
   "devDependencies": {
     "@types/mongoose": "^5.11.96",
