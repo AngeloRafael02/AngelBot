@@ -9,9 +9,8 @@
     "strict": true,
     "skipLibCheck": true,
     //"declaration": true,
-    //"sourceMap": true,
+    "sourceMap": true,
     "moduleResolution": "NodeNext" // <--- Often recommended for ESM projects
-    // or "node" if you have specific reasons
   },
   "include": ["src/**/*.ts", "src/commands/currentWeather2.ts"],
   "exclude": ["node_modules"]
