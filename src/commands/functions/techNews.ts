@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { NewsApiResponse } from '../../interfaces.js';
-
+import { capitalizeFirstLetter } from '../../utils/stings.js';
 
 /**
  * Fetches technology news from NewsAPI.org and returns an array of Discord Embeds.
@@ -8,9 +8,9 @@ import { NewsApiResponse } from '../../interfaces.js';
  * @param count The number of articles to fetch (max 3 for a single embed).
  * @returns An array of EmbedBuilder objects or a string error message.
  */
-export const fetchTechnologyNewsEmbeds = async (apiKey: string, count: number = 3): Promise<EmbedBuilder[] | string> => {
+export const fetchTechnologyNewsEmbeds = async (apiKey: string, count: number = 3, category:string='tech'): Promise<EmbedBuilder[] | string> => {
     try {
-        const newsUrl = `https://api.thenewsapi.com/v1/news/top?categories=tech&api_token=${apiKey}&locale=us&limit=${count}`;//`https://newsapi.org/v2/top-headlines?category=technology&language=en&pageSize=${count}&apiKey=${apiKey}`;
+        const newsUrl = `https://api.thenewsapi.com/v1/news/top?categories=${category}&api_token=${apiKey}&locale=us&limit=${count}`;//`https://newsapi.org/v2/top-headlines?category=technology&language=en&pageSize=${count}&apiKey=${apiKey}`;
         const response:Response = await fetch(newsUrl);
         const res: NewsApiResponse = await response.json();
         const newsEmbeds: EmbedBuilder[] = [];
@@ -20,7 +20,7 @@ export const fetchTechnologyNewsEmbeds = async (apiKey: string, count: number = 
         // Discord embeds have a limit of 25 fields. 10 articles means 10 fields.
         const mainEmbed = new EmbedBuilder()
             .setColor(0x0099ff) // Blue color
-            .setTitle('📰 Top 3 Technology News Headlines 📰')  
+            .setTitle(`📰 Top 3 ${capitalizeFirstLetter(category)} News Headlines 📰`)  
             .setTimestamp()
             .setFooter({ text: 'Powered by NewsAPI.org' });
 
