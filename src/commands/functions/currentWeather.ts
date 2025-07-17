@@ -7,7 +7,7 @@ import { WeatherData } from '../../interfaces.js';
  * @param apiKey Your WeatherAPI.com API key.
  * @returns A Discord EmbedBuilder or null if an error occurs.
  */
-export const fetchWeatherEmbed =  async (city: string, apiKey: string): Promise<EmbedBuilder | string> => {
+export const fetchWeatherEmbed =  async (city: string='Lipa', apiKey: string): Promise<EmbedBuilder | string> => {
     try {
         const weatherUrl = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}&aqi=no`;
         const response = await fetch(weatherUrl);
