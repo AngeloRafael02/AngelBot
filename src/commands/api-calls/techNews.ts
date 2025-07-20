@@ -1,11 +1,11 @@
 import { SlashCommandBuilder, TextChannel, ChatInputCommandInteraction } from 'discord.js';
-import { Command } from '../interfaces.js';
-import { fetchTechnologyNewsEmbeds } from './functions/techNews.js';
+import { Command } from '../../interfaces.js';
+import { fetchTechnologyNewsEmbeds } from '../../utils/cmdFunctions/techNews.js';
 
 const newsCommand:Command = {
     data:new SlashCommandBuilder()
         .setName('news')
-        .setDescription('Fetches the latest top 10 technology news headlines.')
+        .setDescription('Fetches the latest top 3 technology news headlines.')
             .addStringOption(option =>
             option.setName('category')
                 .setDescription('The category of News')

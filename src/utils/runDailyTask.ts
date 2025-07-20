@@ -1,6 +1,6 @@
 import { Client, EmbedBuilder, TextChannel } from "discord.js";
-import fetchTechnologyNewsEmbeds from "../commands/functions/techNews.js";
-import fetchWeatherEmbed from "../commands/functions/currentWeather.js";
+import fetchTechnologyNewsEmbeds from "./cmdFunctions/techNews.js";
+import fetchWeatherEmbed from "./cmdFunctions/currentWeather.js";
 
 /**
  * Runs all daily scheduled tasks and sends their output to their respective channels.

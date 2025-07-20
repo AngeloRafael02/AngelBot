@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { NewsApiResponse } from '../../interfaces.js';
-import { capitalizeFirstLetter } from '../../utils/stings.js';
+import { capitalizeFirstLetter } from '../stings.js';
 
 /**
  * Fetches technology news from NewsAPI.org and returns an array of Discord Embeds.
