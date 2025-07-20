@@ -15,38 +15,39 @@ import { runDailyTasks } from './utils/runDailyTask.js';
 const __filename:string = fileURLToPath(import.meta.url);
 const __dirname:string = dirname(__filename);
 
-const deployCommands = async ():Promise<void> => {
+const deployCommands = async (dir:string):Promise<void> => {
     try {
         const commands:Object[]=[]
-        const commandsPath:string = join(__dirname, 'commands');
-        const commandFiles:string[] = (readdirSync(commandsPath)).filter((file: string) =>{
-            return file.endsWith('.js') || file.endsWith('.ts') // Consider .ts if you're compiling directly from TS
-        });
-
+        const commandsPath:string = dir//join(__dirname, 'commands');
+        const commandFiles = readdirSync(commandsPath,{ withFileTypes: true })
         for (const file of commandFiles){
-            const filePath = join(commandsPath, file);
-            try {
-                //console.log(filePath)
-                const module =  await import(pathToFileURL(filePath).toString());
-                const command = module.default;
-                if ('data' in command && 'execute' in command) {
-                    commands.push(command.data.toJSON());
-                    //console.log(command.data);
-                } else {
-                    console.error(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+            const filePath = join(commandsPath, file.name);
+            if (file.isDirectory()) {
+                deployCommands(filePath);
+            } else {
+                if (file.isFile() && (file.name.endsWith('.js') || file.name.endsWith('.ts'))) {
+                    try {
+                        //console.log(filePath)
+                        const module =  await import(pathToFileURL(filePath).toString());
+                        const command = module.default;
+                        if ('data' in command && 'execute' in command) {
+                            commands.push(command.data.toJSON());
+                            //console.log(command.data);
+                        } else {
+                            console.error(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+                        }
+                    } catch (importError) {
+                        console.error(`[ERROR] Could not load command file ${filePath}:`, importError);
+                    }
                 }
-            } catch (importError) {
-                console.error(`[ERROR] Could not load command file ${filePath}:`, importError);
             }
         }
-        //console.log('Commands: '+JSON.stringify(commands))
         const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN!);
-        console.log(`Started refreshing application slash commands globally.`);
+        //console.log(`Started refreshing application slash commands globally.`);
         await rest.put(
             Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID ?? ''),
             { body: commands },             
         );
-
         console.log('Successfully reloaded all commands!');
     } catch (error) {
         console.error('Error deploying commands:', error)
@@ -70,23 +71,31 @@ const client =  new Client({
 
 client.commands = new Collection<string, Command>();
 
-const commandsPath = join(__dirname, 'commands');
-const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-    const filePath = join(commandsPath, file);
-    const module =  await import(pathToFileURL(filePath).toString());
-    const command = module.default;
-    if ('data' in command && 'execute' in command) {
-        client.commands.set(command.data.name, command);
-    } else {
-        console.log(`The Command ${filePath} is missing a required "data" or "execute" property.`)
+const deployCommandsToCollection = async (dir:string) => {
+    //const commandsPath = join(__dirname, 'commands');
+    const commandFiles = readdirSync(dir,{ withFileTypes: true })//.filter(file => file.endsWith('.js'));
+    for (const file of commandFiles) {
+        const filePath = join(dir, file.name);
+        if (file.isDirectory()) {
+            deployCommandsToCollection(filePath);
+        } else {
+            if (file.isFile() && (file.name.endsWith('.js') || file.name.endsWith('.ts'))) {
+                const module =  await import(pathToFileURL(filePath).toString());
+                const command = module.default;
+                if ('data' in command && 'execute' in command) {
+                    client.commands.set(command.data.name, command);
+                } else {
+                    console.log(`The Command ${filePath} is missing a required "data" or "execute" property.`)
+                }
+            }
+        }
     }
 }
+deployCommandsToCollection(join(__dirname, 'commands'));
 
 client.once(Events.ClientReady, async ()=>{
     console.log(`Ready, Logged in as ${client.user?.tag}`);
-    await deployCommands();
+    await deployCommands(join(__dirname, 'commands'));
     console.log(`Commands Deployed Globally`);
     const statusType = process.env.BOT_STATUS || 'online';
     const activityType = process.env.ACTIVITY_TYPE || 'PLAYING';
