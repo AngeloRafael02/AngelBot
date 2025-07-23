@@ -18,7 +18,7 @@ const __dirname:string = dirname(__filename);
 const deployCommands = async (dir:string):Promise<void> => {
     try {
         const commands:Object[]=[]
-        const commandsPath:string = dir//join(__dirname, 'commands');
+        const commandsPath:string = dir
         const commandFiles = readdirSync(commandsPath,{ withFileTypes: true })
         for (const file of commandFiles){
             const filePath = join(commandsPath, file.name);
@@ -27,12 +27,10 @@ const deployCommands = async (dir:string):Promise<void> => {
             } else {
                 if (file.isFile() && (file.name.endsWith('.js') || file.name.endsWith('.ts'))) {
                     try {
-                        //console.log(filePath)
                         const module =  await import(pathToFileURL(filePath).toString());
                         const command = module.default;
                         if ('data' in command && 'execute' in command) {
                             commands.push(command.data.toJSON());
-                            //console.log(command.data);
                         } else {
                             console.error(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
                         }
@@ -43,11 +41,11 @@ const deployCommands = async (dir:string):Promise<void> => {
             }
         }
         const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN!);
-        //console.log(`Started refreshing application slash commands globally.`);
         await rest.put(
             Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID ?? ''),
             { body: commands },             
         );
+        //console.table(commands)
         console.log('Successfully reloaded all commands!');
     } catch (error) {
         console.error('Error deploying commands:', error)
@@ -60,6 +58,7 @@ const client =  new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildVoiceStates,
     ],
     partials:[
         Partials.Channel,
@@ -72,8 +71,7 @@ const client =  new Client({
 client.commands = new Collection<string, Command>();
 
 const deployCommandsToCollection = async (dir:string) => {
-    //const commandsPath = join(__dirname, 'commands');
-    const commandFiles = readdirSync(dir,{ withFileTypes: true })//.filter(file => file.endsWith('.js'));
+    const commandFiles = readdirSync(dir,{ withFileTypes: true })
     for (const file of commandFiles) {
         const filePath = join(dir, file.name);
         if (file.isDirectory()) {
@@ -91,10 +89,11 @@ const deployCommandsToCollection = async (dir:string) => {
         }
     }
 }
-deployCommandsToCollection(join(__dirname, 'commands'));
+
 
 client.once(Events.ClientReady, async ()=>{
     console.log(`Ready, Logged in as ${client.user?.tag}`);
+    await deployCommandsToCollection(join(__dirname, 'commands'));
     await deployCommands(join(__dirname, 'commands'));
     console.log(`Commands Deployed Globally`);
     const statusType = process.env.BOT_STATUS || 'online';
