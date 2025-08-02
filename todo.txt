@@ -1,5 +1,10 @@
 ToDo
     > call '/weather Lipa' every 8:00 am in Weather Channel - DONE
     > call '/news' the fet the top 3 tech news from The News API - DONE
+    > implement lazy loading to /weather and /news command - DONE
+    > revamp config.ts - Canceled/OnHold
+    > Dj Bot
+    > Leveling System
+    
 BUGS
     > Slash Commands are not Found - Done
