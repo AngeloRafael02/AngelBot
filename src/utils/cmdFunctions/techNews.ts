@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { NewsApiResponse } from '../../interfaces.js';
+import { NewsApiResponse } from '../../interfaces/NewsData.js';
 import { capitalizeFirstLetter } from '../stings.js';
 
 /**

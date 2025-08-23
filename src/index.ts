@@ -9,7 +9,7 @@ import { join } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-import { ClientWithCommands, Command } from './interfaces.js'
+import { Command,ClientWithCommands } from './interfaces/Commands.js';
 import { runDailyTasks } from './utils/runDailyTask.js';
 
 const __filename:string = fileURLToPath(import.meta.url);
