@@ -11,9 +11,17 @@ import { dirname } from 'path';
 
 import { Command,ClientWithCommands } from './interfaces/Commands.js';
 import { runDailyTasks } from './utils/runDailyTask.js';
+import { connectToDatabase } from './database/connect.js';
 
 const __filename:string = fileURLToPath(import.meta.url);
 const __dirname:string = dirname(__filename);
+
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+    console.error('MONGODB_URI is not defined in the environment variables.');
+    process.exit(1);
+}
+
 
 const deployCommands = async (dir:string):Promise<void> => {
     try {
@@ -92,14 +100,19 @@ const deployCommandsToCollection = async (dir:string) => {
 
 
 client.once(Events.ClientReady, async ()=>{
+    //Loading Commands
     console.log(`Ready, Logged in as ${client.user?.tag}`);
     await deployCommandsToCollection(join(__dirname, 'commands'));
     await deployCommands(join(__dirname, 'commands'));
     console.log(`Commands Deployed Globally`);
+
+    //Connecting to MongoDB
+    await connectToDatabase(mongoUri);
+
+    //Setting Up Bot
     const statusType = process.env.BOT_STATUS || 'online';
     const activityType = process.env.ACTIVITY_TYPE || 'PLAYING';
     const activityName = process.env.ACTIVITY_NAME || 'discord';
-
     client.user?.setPresence({
         status:PresenceUpdateStatus.Online, //Make it more dynamic in the future via StatusMap
         activities:[{
@@ -110,7 +123,8 @@ client.once(Events.ClientReady, async ()=>{
     console.log(`Bot Status Set To ${statusType}`);
     console.log(`Activity Set To ${activityType} ${activityName}`);
 
-    schedule('49 9 * * *', async () => {
+    //Setting Up cronJobs
+    schedule('0 9 * * *', async () => {
         await runDailyTasks(client, 'Scheduled Cron Job');
     }, {
         timezone: "Asia/Manila" // Set the timezone specifically for Balete, Calabarzon, Philippines
