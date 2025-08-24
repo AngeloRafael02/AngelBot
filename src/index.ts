@@ -22,7 +22,6 @@ if (!mongoUri) {
     process.exit(1);
 }
 
-
 const deployCommands = async (dir:string):Promise<void> => {
     try {
         const commands:Object[]=[]
@@ -89,6 +88,7 @@ const deployCommandsToCollection = async (dir:string) => {
                 const module =  await import(pathToFileURL(filePath).toString());
                 const command = module.default;
                 if ('data' in command && 'execute' in command) {
+                    console.log(command.data)
                     client.commands.set(command.data.name, command);
                 } else {
                     console.log(`The Command ${filePath} is missing a required "data" or "execute" property.`)
@@ -102,9 +102,9 @@ const deployCommandsToCollection = async (dir:string) => {
 client.once(Events.ClientReady, async ()=>{
     //Loading Commands
     console.log(`Ready, Logged in as ${client.user?.tag}`);
-    await deployCommandsToCollection(join(__dirname, 'commands'));
-    await deployCommands(join(__dirname, 'commands'));
-    console.log(`Commands Deployed Globally`);
+    const commandsDir = join(__dirname, 'commands')
+    await deployCommandsToCollection(commandsDir);
+    await deployCommands(join(commandsDir));
 
     //Connecting to MongoDB
     await connectToDatabase(mongoUri);
