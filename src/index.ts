@@ -18,7 +18,7 @@ const __dirname:string = dirname(__filename);
 
 const mongoUri = process.env.MONGODB_URI;
 if (!mongoUri) {
-    console.error('MONGODB_URI is not defined in the environment variables.');
+    console.error('Mongo Connection String Not Found.');
     process.exit(1);
 }
 
