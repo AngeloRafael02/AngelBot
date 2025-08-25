@@ -6,6 +6,7 @@ const HabitSchema = new Schema<IHabit>({
   name: {
     type: String,
     required: true,
+    unique: true
   },
 
   description:{
@@ -41,7 +42,10 @@ const HabitSchema = new Schema<IHabit>({
     required: false,
   },
   
-  history: [Date],
+  history: {
+    type:[Date],
+    required: false
+  },
 });
 
 export const Habit = model<IHabit>('Habit', HabitSchema);
