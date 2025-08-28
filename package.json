@@ -7,11 +7,13 @@
   "scripts": {
     "inspect": "node --inspect dist/index.js",
     "profile": "node --prof dist/index.js",
-    "build": "rmdir /s /q dist && npx tsc",
+    "build:Windows": "rmdir /s /q dist && npx tsc",
+    "build:Linux": "rm -r dist && npx tsc",
     "build2": "node  --loader ts-node/esm src/index.ts",
     "clean": "rimraf dist",
     "start": "node dist/index.js",
-    "start:dev": "npm run build && npm run start"
+    "start:Window": "npm run build:Window && npm run start",
+    "start:Linux": "npm run build:Linux && npm run start"
   },
   "repository": {
     "type": "git",
