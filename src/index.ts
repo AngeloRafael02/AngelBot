@@ -88,7 +88,7 @@ const deployCommandsToCollection = async (dir:string) => {
                 const module =  await import(pathToFileURL(filePath).toString());
                 const command = module.default;
                 if ('data' in command && 'execute' in command) {
-                    console.log(command.data)
+                    //console.log(command.data)
                     client.commands.set(command.data.name, command);
                 } else {
                     console.log(`The Command ${filePath} is missing a required "data" or "execute" property.`)

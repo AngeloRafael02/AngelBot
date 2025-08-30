@@ -1,4 +1,3 @@
-// src/models/User.ts
 import { Schema, model } from 'mongoose';
 import { IUser } from '../interfaces/Habits.js';
 

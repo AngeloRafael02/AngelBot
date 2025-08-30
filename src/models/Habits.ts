@@ -1,4 +1,3 @@
-// src/models/Habit.ts
 import { Schema, model } from 'mongoose';
 import { IHabit } from '../interfaces/Habits.js';
 
