@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'; // Import EmbedBuilder
+import { ChatInputCommandInteraction, SlashCommandBuilder, MessageFlags } from 'discord.js';
 import { Command } from '../../interfaces/Commands.js';
 import { User } from '../../models/User.js';
 
@@ -21,17 +21,23 @@ const habitUserCommand: Command = {
         const subcommand = interaction.options.getSubcommand();
         switch (subcommand) {
             case 'add-me':
-                const existingUser = await User.findOne({userId})
-                if (existingUser) {
-                    await interaction.reply({ content: 'You already have a profile!', ephemeral: true });
-                } else {
-                    const newUser = new User({
-                        discordId:userId,
-                        username:interaction.user.username
-                    })
-                    newUser.save();
-                    await interaction.reply('Profile created successfully! 🎉');
+                try {
+                    const existingUser = await User.findOne({discordId:userId}).lean()
+                    if (existingUser) {
+                        await interaction.reply({ content: 'You already have a profile!', flags:MessageFlags.Ephemeral });
+                    } else {
+                        const newUser = new User({
+                            discordId:userId,
+                            username:interaction.user.username
+                        })
+                        newUser.save();
+                        await interaction.reply({ content:'Profile created successfully! 🎉', flags:MessageFlags.Ephemeral });
+                    }
+                } catch (error:any) {
+                    console.error('Error creating user profile:', error);
+                    await interaction.reply({ content: 'An unexpected error occurred while creating your profile.', flags: MessageFlags.Ephemeral });
                 }
+
                 break;
             case 'remove-me':
                 const result = await User.findOneAndDelete({ 
@@ -39,13 +45,13 @@ const habitUserCommand: Command = {
                     username:interaction.user.username 
                 });
                 if (!result) {
-                    await interaction.reply({ content: 'You don\'t have a profile to delete.'});
+                    await interaction.reply({ content: 'You don\'t have a profile to delete.', flags:MessageFlags.Ephemeral});
                 } else {
-                    await interaction.reply({ content: 'Your profile has been deleted. 🗑️'});
+                    await interaction.reply({ content: 'Your profile has been deleted. 🗑️', flags:MessageFlags.Ephemeral});
                 }
                 break;
             default :
-                await interaction.reply({ content: 'Unknown subcommand!', ephemeral: true })
+                await interaction.reply({ content: 'Unknown subcommand!', flags:MessageFlags.Ephemeral})
                 break;
         }
     }
